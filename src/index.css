@@ -1,0 +1,142 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+:root {
+  --ink: #16181d;
+  --muted: #6b7280;
+  --line: #e5e7eb;
+  --bg: #f6f5f2;
+  --paper: #ffffff;
+  --accent: #1f6f5c;
+  --accent-soft: #e6f2ee;
+  --warn: #b45309;
+  --radius: 12px;
+  font-family: Inter, system-ui, sans-serif;
+  color: var(--ink);
+  background: var(--bg);
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); }
+button, input, select, textarea { font: inherit; color: inherit; }
+
+.topbar { display: flex; align-items: center; gap: 12px; padding: 14px 20px; border-bottom: 1px solid var(--line); background: var(--paper); }
+.logo { font-weight: 700; font-size: 18px; text-decoration: none; color: var(--ink); }
+.logo span { color: var(--accent); }
+.badge { font-size: 12px; background: #fff7ed; color: var(--warn); padding: 3px 8px; border-radius: 99px; }
+
+.page { max-width: 860px; margin: 0 auto; padding: 24px 16px 120px; }
+.center { text-align: center; padding-top: 80px; }
+.muted { color: var(--muted); }
+.small { font-size: 13px; }
+.grow { flex: 1; }
+.right { text-align: right; }
+.num { text-align: right; white-space: nowrap; }
+
+/* кнопки */
+button, .btn { border: 1px solid var(--line); background: var(--paper); padding: 9px 14px; border-radius: 10px; cursor: pointer; text-decoration: none; display: inline-flex; align-items: center; gap: 6px; }
+button:hover, .btn:hover { border-color: #c9ccd2; }
+.primary { background: var(--accent); color: #fff; border-color: var(--accent); font-weight: 600; }
+.primary:hover { background: #185a4a; }
+.primary:disabled { opacity: .5; cursor: default; }
+.big { padding: 14px 22px; font-size: 16px; }
+.link { border: none; background: none; color: var(--accent); padding: 4px 0; font-weight: 500; }
+.x { border: none; background: none; color: var(--muted); font-size: 18px; padding: 0 6px; }
+.chip { font-size: 13px; padding: 7px 12px; border-radius: 99px; background: var(--paper); text-align: left; }
+
+/* старт */
+.start { padding-top: 40px; text-align: center; }
+.start h1 { font-size: clamp(26px, 5vw, 40px); margin: 0 0 8px; letter-spacing: -0.02em; }
+.start-form { margin: 28px auto 16px; max-width: 640px; display: grid; gap: 12px; }
+.input-wrap { position: relative; }
+.input-wrap textarea { width: 100%; padding: 16px 64px 16px 16px; border-radius: var(--radius); border: 1px solid var(--line); background: var(--paper); font-size: 17px; resize: vertical; box-shadow: 0 1px 2px rgba(0,0,0,.04); }
+.input-wrap textarea:focus { outline: 2px solid var(--accent); outline-offset: -1px; }
+.mic { position: absolute; right: 10px; top: 10px; width: 44px; height: 44px; border-radius: 50%; justify-content: center; font-size: 18px; }
+.mic.on { background: #dc2626; color: #fff; border-color: #dc2626; animation: pulse 1.2s infinite; }
+@keyframes pulse { 50% { box-shadow: 0 0 0 8px rgba(220,38,38,.15); } }
+.examples { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; max-width: 640px; margin: 0 auto; }
+
+/* плашка «определили» */
+.detected { background: var(--accent-soft); border-radius: var(--radius); padding: 10px 14px; margin-bottom: 12px; font-size: 14px; }
+.detected-row { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
+.spark { font-weight: 600; color: var(--accent); }
+.detected-edit { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; margin-top: 10px; }
+.detected-edit label { display: grid; gap: 4px; font-size: 12px; color: var(--muted); }
+.detected-edit input, .detected-edit select { padding: 7px 9px; border: 1px solid var(--line); border-radius: 8px; background: #fff; }
+
+.toolbar { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; margin-bottom: 14px; }
+
+/* документ сметы */
+.doc { background: var(--paper); border-radius: var(--radius); padding: clamp(18px, 4vw, 40px); box-shadow: 0 1px 3px rgba(0,0,0,.06); border-top: 5px solid var(--accent); }
+.doc-head { display: flex; justify-content: space-between; gap: 16px; padding-bottom: 16px; border-bottom: 1px solid var(--line); }
+.doc-brand { font-weight: 700; font-size: 18px; }
+.doc-label { font-weight: 700; text-transform: uppercase; letter-spacing: .08em; color: var(--accent); }
+.doc-title { margin: 20px 0 4px; font-size: 24px; }
+.doc h3 { margin: 26px 0 8px; font-size: 13px; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); }
+.doc h4 { margin: 0 0 6px; font-size: 14px; }
+table { width: 100%; border-collapse: collapse; font-size: 14px; }
+th { text-align: left; font-weight: 500; color: var(--muted); font-size: 12px; padding: 6px 4px; border-bottom: 1px solid var(--line); }
+td { padding: 7px 4px; border-bottom: 1px solid #f1f2f4; }
+.cell { border: 1px solid transparent; background: transparent; padding: 3px 5px; border-radius: 6px; width: 100%; }
+.cell:hover { border-color: var(--line); }
+.cell:focus { border-color: var(--accent); outline: none; background: #fff; }
+.cell.short { width: 72px; text-align: right; }
+.title-input { font-size: 24px; font-weight: 700; }
+
+.options { margin-top: 8px; }
+.option { display: flex; align-items: center; gap: 10px; padding: 10px 12px; border: 1px dashed var(--line); border-radius: 10px; margin-bottom: 6px; font-size: 14px; }
+.option.checked { border-style: solid; border-color: var(--accent); background: var(--accent-soft); }
+.option input[type=checkbox] { width: 18px; height: 18px; accent-color: var(--accent); }
+
+.totals { margin: 22px 0 0 auto; max-width: 320px; font-size: 14px; }
+.totals div { display: flex; justify-content: space-between; padding: 4px 0; }
+.totals .grand { border-top: 2px solid var(--ink); margin-top: 6px; padding-top: 10px; font-size: 20px; font-weight: 700; }
+.scope { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-top: 26px; font-size: 14px; }
+.scope ul { margin: 0; padding-left: 18px; }
+.scope li { margin-bottom: 4px; }
+.scope p { margin: 0 0 12px; }
+
+/* диалог отправки */
+.overlay { position: fixed; inset: 0; background: rgba(22,24,29,.45); display: grid; place-items: center; padding: 16px; z-index: 10; }
+.dialog { position: relative; background: var(--paper); border-radius: 16px; padding: 28px; width: 100%; max-width: 460px; max-height: 92vh; overflow: auto; }
+.dialog h2 { margin: 0 0 6px; }
+.close { position: absolute; right: 14px; top: 12px; font-size: 24px; }
+fieldset { border: none; padding: 0; margin: 18px 0; display: grid; gap: 8px; }
+legend { font-weight: 600; margin-bottom: 8px; }
+.dialog input, .mini-form input, .mini-form textarea { width: 100%; padding: 11px 12px; border: 1px solid var(--line); border-radius: 10px; }
+.dialog form > .primary { width: 100%; justify-content: center; }
+.linkbox { display: flex; gap: 8px; margin: 14px 0; }
+.share { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 14px; }
+.wa { background: #25d366; color: #fff; border-color: #25d366; }
+.tg { background: #229ed9; color: #fff; border-color: #229ed9; }
+
+/* мои сметы */
+.sent { margin-top: 36px; }
+.sent-row { display: flex; gap: 12px; align-items: center; padding: 12px 14px; background: var(--paper); border-radius: 10px; margin-bottom: 6px; text-decoration: none; color: inherit; font-size: 14px; }
+.status { font-size: 12px; padding: 3px 9px; border-radius: 99px; white-space: nowrap; }
+.st-sent { background: #f3f4f6; }
+.st-opened { background: #fef3c7; }
+.st-accepted { background: #dcfce7; }
+
+/* страница клиента */
+.action-bar { position: fixed; left: 0; right: 0; bottom: 0; background: var(--paper); border-top: 1px solid var(--line); padding: 14px 16px; box-shadow: 0 -4px 16px rgba(0,0,0,.05); }
+.action-bar > * { max-width: 860px; margin-left: auto; margin-right: auto; }
+.action-total { display: flex; align-items: baseline; gap: 10px; margin-bottom: 10px; }
+.action-total strong { font-size: 22px; }
+.actions { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.mini-form { display: grid; gap: 10px; }
+.agree { display: flex; gap: 8px; align-items: center; font-size: 14px; }
+.success { background: #dcfce7; padding: 14px; border-radius: 10px; font-weight: 500; }
+.info { background: var(--accent-soft); padding: 10px 14px; border-radius: 10px; margin-bottom: 10px; font-size: 14px; }
+
+@media (max-width: 600px) {
+  .scope { grid-template-columns: 1fr; }
+  .cell.short { width: 56px; }
+  .doc-head { flex-direction: column; }
+  .right { text-align: left; }
+}
+
+@media print {
+  .topbar, .toolbar, .detected, .sent, .action-bar, .x, .link { display: none !important; }
+  body, .page { background: #fff; padding: 0; }
+  .doc { box-shadow: none; }
+  .cell { border: none; }
+}
