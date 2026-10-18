@@ -7,9 +7,9 @@ import { generateQuote, listQuotes, business, isDemo } from '../lib/api'
 import { money, totals } from '../lib/quote'
 
 const STATUS = {
-  sent: { label: 'Sent', cls: 'st-sent' },
-  opened: { label: '👀 Opened', cls: 'st-opened' },
-  accepted: { label: '✅ Accepted', cls: 'st-accepted' },
+  sent: { label: 'Отправлена', cls: 'st-sent' },
+  opened: { label: '👀 Открыта', cls: 'st-opened' },
+  accepted: { label: '✅ Принята', cls: 'st-accepted' },
 }
 
 // Экран мастера: описал → смета → отправил → видит статусы
@@ -17,11 +17,13 @@ export default function MasterPage() {
   const [quote, setQuote] = useState(null)
   const [loading, setLoading] = useState(false)
   const [sending, setSending] = useState(false)
-  const [sent, setSent] = useState(listQuotes())
+  const [sent, setSent] = useState([])
 
-  // статусы обновляются, когда клиент открывает/принимает смету (в демо — в другой вкладке)
+  // Загружаем список при открытии и обновляем, когда вы возвращаетесь на вкладку.
+  // listQuotes асинхронная (с n8n это запрос в интернет), поэтому .then(setSent)
   useEffect(() => {
-    const refresh = () => setSent(listQuotes())
+    const refresh = () => listQuotes().then(setSent).catch(() => {})
+    refresh()
     window.addEventListener('storage', refresh)
     window.addEventListener('focus', refresh)
     return () => { window.removeEventListener('storage', refresh); window.removeEventListener('focus', refresh) }
@@ -30,11 +32,9 @@ export default function MasterPage() {
   async function handleGenerate(text) {
     setLoading(true)
     try {
-      const result = await generateQuote(text)
-      console.log('Quote received:', result)
-      setQuote(result)
+      setQuote(await generateQuote(text))
     } catch (err) {
-      alert('Generation failed: ' + err.message)
+      alert('Ошибка генерации: ' + err.message)
     } finally {
       setLoading(false)
     }
@@ -59,7 +59,7 @@ export default function MasterPage() {
       )}
 
       {sending && (
-        <SendDialog quote={quote} onClose={() => setSending(false)} onSent={() => setSent(listQuotes())} />
+        <SendDialog quote={quote} onClose={() => setSending(false)} onSent={() => listQuotes().then(setSent)} />
       )}
 
       {sent.length > 0 && (
@@ -72,7 +72,7 @@ export default function MasterPage() {
               <span className={`status ${STATUS[q.status]?.cls}`}>{STATUS[q.status]?.label}</span>
             </a>
           ))}
-          {isDemo && <p className="muted small">Demo: open a link as the client and the status here will update. In production, notifications arrive via Telegram.</p>}
+          {isDemo && <p className="muted small">Demo: open the link as a client — the status will update here. In production, notifications are sent via Telegram.</p>}
         </section>
       )}
     </div>

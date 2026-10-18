@@ -10,6 +10,7 @@
     GET  {N8N}/get-quote?id=... →                                { quote, business, client, status }
     POST {N8N}/quote-event      { id, type, payload }          → { ok: true }
          type: "opened" | "accepted" | "question"
+    GET  {N8N}/list-quotes      →                                { quotes: [...] }
 */
 import { generateMock } from './mockGenerator'
 
@@ -34,7 +35,7 @@ const store = {
 
 export async function generateQuote(text) {
   if (isDemo) {
-    await new Promise((r) => setTimeout(r, 5000)) // имитация работы AI
+    await new Promise((r) => setTimeout(r, 1200)) // имитация работы AI
     return generateMock(text)
   }
   return call('generate-quote', { text })
@@ -46,12 +47,14 @@ export async function saveQuote(quote, business, client) {
     store.set(`q_${id}`, { quote, business, client, status: 'sent', sentAt: Date.now(), events: [] })
     return { id }
   }
-  return call('save-quote', { quote, business, client })
+  // appUrl — чтобы n8n мог вставить ссылку на смету в сообщение Telegram
+  return call('save-quote', { quote, business, client, appUrl: window.location.origin })
 }
 
 export async function getQuote(id) {
   if (isDemo) return store.get(`q_${id}`)
-  return call(`get-quote?id=${encodeURIComponent(id)}`)
+  const data = await call(`get-quote?id=${encodeURIComponent(id)}`)
+  return data && data.quote ? data : null // n8n отвечает { notFound: true }, если сметы нет
 }
 
 // События со страницы клиента. В боевом режиме n8n шлёт мастеру сообщение в Telegram.
@@ -69,10 +72,12 @@ export async function sendEvent(id, type, payload = {}) {
   return call('quote-event', { id, type, payload })
 }
 
-// Список отправленных смет со статусами (в демо — из браузера).
-// В боевом режиме сюда добавляется webhook list-quotes.
-export function listQuotes() {
-  if (!isDemo) return []
+// Список отправленных смет со статусами: в демо — из браузера, с n8n — webhook list-quotes
+export async function listQuotes() {
+  if (!isDemo) {
+    const data = await call('list-quotes')
+    return data.quotes || []
+  }
   const out = []
   try {
     for (let i = 0; i < localStorage.length; i++) {
