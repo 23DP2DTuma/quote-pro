@@ -1,9 +1,6 @@
-# QuotePro — a faster Quote Writer for contractors
+# QuotePro — a faster Quote Writer
 
-An improved take on the [Sharpify Quote Writer](https://quote.sharpify.io/app/):
-**describe a job in one sentence → get a full quote → send the client a link they can accept in one tap.**
-
-**Live demo:** https://YOUR-PROJECT.vercel.app
+**Live demo:** https://quote-pro-delta.vercel.app/
 
 ---
 
@@ -61,9 +58,6 @@ src/
     api.js              every request to n8n (demo mode without it)
     quote.js            quote format, totals(), money(), labels in EN / LV / RU
     mockGenerator.js    offline demo generator (used when n8n is not configured)
-n8n/
-  quotepro-api-workflow.json        generate / save / get / list
-  quotepro-translate-workflow.json  translate
 ```
 
 ---
