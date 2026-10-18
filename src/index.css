@@ -140,3 +140,7 @@ legend { font-weight: 600; margin-bottom: 8px; }
   .doc { box-shadow: none; }
   .cell { border: none; }
 }
+
+/* ошибки в формах */
+.dialog input.invalid { border-color: #dc2626; background: #fef2f2; }
+.input-error { color: #dc2626; font-size: 13px; margin: -2px 0 2px; }

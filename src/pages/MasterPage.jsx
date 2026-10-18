@@ -3,13 +3,13 @@ import StartScreen from '../components/StartScreen'
 import DetectedBar from '../components/DetectedBar'
 import QuoteDocument from '../components/QuoteDocument'
 import SendDialog from '../components/SendDialog'
-import { generateQuote, listQuotes, business, isDemo } from '../lib/api'
-import { money, totals } from '../lib/quote'
+import { generateQuote, translateQuote, listQuotes, business, isDemo } from '../lib/api'
+import { money, totals, detectLanguage } from '../lib/quote'
 
 const STATUS = {
-  sent: { label: 'Отправлена', cls: 'st-sent' },
-  opened: { label: '👀 Открыта', cls: 'st-opened' },
-  accepted: { label: '✅ Принята', cls: 'st-accepted' },
+  sent: { label: 'Sent', cls: 'st-sent' },
+  opened: { label: '👀 Opened', cls: 'st-opened' },
+  accepted: { label: '✅ Accepted', cls: 'st-accepted' },
 }
 
 // Экран мастера: описал → смета → отправил → видит статусы
@@ -17,6 +17,7 @@ export default function MasterPage() {
   const [quote, setQuote] = useState(null)
   const [loading, setLoading] = useState(false)
   const [sending, setSending] = useState(false)
+  const [translating, setTranslating] = useState(false)
   const [sent, setSent] = useState([])
 
   // Загружаем список при открытии и обновляем, когда вы возвращаетесь на вкладку.
@@ -32,11 +33,27 @@ export default function MasterPage() {
   async function handleGenerate(text) {
     setLoading(true)
     try {
-      setQuote(await generateQuote(text))
+      const result = await generateQuote(text)
+      // язык сметы = язык, на котором написано описание (страховка, если AI ошибся)
+      result.detected = { ...result.detected, language: detectLanguage(text) }
+      setQuote(result)
     } catch (err) {
-      alert('Ошибка генерации: ' + err.message)
+      alert('Generation failed: ' + err.message)
     } finally {
       setLoading(false)
+    }
+  }
+
+  // Смена языка в плашке: AI переводит все строки сметы, цены и количества не меняются
+  async function handleLanguage(language) {
+    if (language === quote.detected.language) return
+    setTranslating(true)
+    try {
+      setQuote(await translateQuote(quote, language))
+    } catch (err) {
+      alert('Translation failed: ' + err.message)
+    } finally {
+      setTranslating(false)
     }
   }
 
@@ -46,7 +63,7 @@ export default function MasterPage() {
         <StartScreen onSubmit={handleGenerate} loading={loading} />
       ) : (
         <>
-          <DetectedBar detected={quote.detected} onChange={(d) => setQuote({ ...quote, detected: d })} />
+          <DetectedBar detected={quote.detected} onChange={(d) => setQuote({ ...quote, detected: d })} onLanguage={handleLanguage} translating={translating} />
           <div className="toolbar">
             <button className="link" onClick={() => setQuote(null)}>← New quote</button>
             <span className="muted small">Click any row to edit</span>
@@ -72,7 +89,7 @@ export default function MasterPage() {
               <span className={`status ${STATUS[q.status]?.cls}`}>{STATUS[q.status]?.label}</span>
             </a>
           ))}
-          {isDemo && <p className="muted small">Demo: open the link as a client — the status will update here. In production, notifications are sent via Telegram.</p>}
+          {isDemo && <p className="muted small">Demo: open a link as the client and the status here will update. In production, notifications arrive via Telegram.</p>}
         </section>
       )}
     </div>

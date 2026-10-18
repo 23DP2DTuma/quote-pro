@@ -22,6 +22,13 @@
   }
 */
 
+// Язык по буквам текста: кириллица → ru, латышские буквы → lv, иначе en
+export function detectLanguage(text = '') {
+  if (/[а-яё]/i.test(text)) return 'ru'
+  if (/[āčēģīķļņšūž]/i.test(text)) return 'lv'
+  return 'en'
+}
+
 export const CURRENCY_SIGN = { EUR: '€', GBP: '£', USD: '$' }
 
 export function money(value, currency = 'EUR') {
@@ -72,5 +79,11 @@ T.lv = {
   accept: 'Apstiprināt tāmi', question: 'Uzdot jautājumu', options: 'Papildu iespējas',
   included: 'Iekļauts', excluded: 'Nav iekļauts', warranty: 'Garantija', payment: 'Apmaksa',
   unitPrice: 'Cena/vien.', yourCompany: 'Jūsu uzņēmums',
+  item: 'Pozīcija', qty: 'Daudz.', amount: 'Summa', phase: 'Posms', duration: 'Termiņš',
+  optionsHint: 'Atzīmējiet, ko pievienot — kopsumma pārrēķināsies', timeline: 'Darbu termiņš',
+  subtotal: 'Bez PVN', yourName: 'Jūsu vārds', agree: 'Esmu iepazinies ar tāmi un to apstiprinu',
+  accepted: 'Tāme apstiprināta. Meistars sazināsies ar jums, lai vienotos par datumu.',
+  send: 'Nosūtīt', questionSent: 'Jautājums nosūtīts — meistars drīz atbildēs.',
+  validUntil: 'Derīga līdz', from: 'No',
 }
 export const t = (lang) => T[lang] || T.en

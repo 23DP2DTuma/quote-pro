@@ -11,6 +11,7 @@
     POST {N8N}/quote-event      { id, type, payload }          → { ok: true }
          type: "opened" | "accepted" | "question"
     GET  {N8N}/list-quotes      →                                { quotes: [...] }
+    POST {N8N}/translate-quote  { quote, language }            → переведённая смета
 */
 import { generateMock } from './mockGenerator'
 
@@ -70,6 +71,13 @@ export async function sendEvent(id, type, payload = {}) {
     return { ok: true }
   }
   return call('quote-event', { id, type, payload })
+}
+
+// Перевод готовой сметы на другой язык (RU / LV / EN).
+// Демо: меняются только подписи. С n8n: AI переводит все строки, цены не трогает.
+export async function translateQuote(quote, language) {
+  if (isDemo) return { ...quote, detected: { ...quote.detected, language } }
+  return call('translate-quote', { quote, language })
 }
 
 // Список отправленных смет со статусами: в демо — из браузера, с n8n — webhook list-quotes

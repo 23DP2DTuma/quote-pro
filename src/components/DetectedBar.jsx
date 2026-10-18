@@ -7,7 +7,7 @@ const REGIONS = {
 }
 
 // Плашка «что AI угадал» — заменяет поля отрасль / регион / валюта / НДС / язык
-export default function DetectedBar({ detected, onChange }) {
+export default function DetectedBar({ detected, onChange, onLanguage, translating }) {
   const [open, setOpen] = useState(false)
   const set = (patch) => onChange({ ...detected, ...patch })
 
@@ -18,6 +18,7 @@ export default function DetectedBar({ detected, onChange }) {
         <span>{detected.industry}</span>·<span>{detected.region}</span>·
         <span>{detected.currency}</span>·<span>VAT {detected.vat}%</span>·
         <span>{detected.language.toUpperCase()}</span>
+        {translating && <span className="muted">· translating…</span>}
         <button className="link" onClick={() => setOpen(!open)}>{open ? 'done' : 'edit'}</button>
       </div>
       {open && (
@@ -29,8 +30,8 @@ export default function DetectedBar({ detected, onChange }) {
             </select>
           </label>
           <label>VAT %<input type="number" value={detected.vat} onChange={(e) => set({ vat: Number(e.target.value) })} /></label>
-          <label>Language
-            <select value={detected.language} onChange={(e) => set({ language: e.target.value })}>
+          <label>Language · translates the quote
+            <select value={detected.language} disabled={translating} onChange={(e) => onLanguage(e.target.value)}>
               <option value="ru">RU</option><option value="lv">LV</option><option value="en">EN</option>
             </select>
           </label>
