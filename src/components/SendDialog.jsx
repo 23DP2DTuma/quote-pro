@@ -74,7 +74,7 @@ export default function SendDialog({ quote, onClose, onSent }) {
         {!link ? (
           <form onSubmit={send} noValidate>
             <h2>Send to client</h2>
-            <p className="muted small">Your client gets a link where they can pick options and accept the quote online. You'll be notified when they open it.</p>
+            <p className="muted small">Your client gets a link where they can pick extras, see the total update, and accept the quote on WhatsApp in one tap.</p>
 
             <fieldset>
               <legend>You {saved.name && <span className="muted small">· saved from last time</span>}</legend>
@@ -113,7 +113,7 @@ export default function SendDialog({ quote, onClose, onSent }) {
               <a className="btn tg" target="_blank" rel="noreferrer" href={`https://t.me/share/url?url=${encodeURIComponent(link)}&text=${encodeURIComponent(msg)}`}>Telegram</a>
               <a className="btn" target="_blank" rel="noreferrer" href={link}>Open as client</a>
             </div>
-            <p className="muted small">What's next: you'll get a message when the client opens the quote, accepts it or asks a question. If they don't respond within 2 days, they'll get a polite reminder.</p>
+            <p className="muted small">What's next: when the client taps “Accept via WhatsApp”, you get a ready message with the chosen extras and the total.</p>
           </div>
         )}
       </div>

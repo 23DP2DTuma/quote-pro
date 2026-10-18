@@ -1,32 +1,18 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import QuoteDocument from '../components/QuoteDocument'
-import { getQuote, sendEvent } from '../lib/api'
+import { getQuote } from '../lib/api'
 import { money, totals, t } from '../lib/quote'
 
-// Страница, которую клиент открывает по ссылке
+// Страница, которую клиент открывает по ссылке /q/:id
 export default function ClientPage() {
-  const { id } = useParams()
+  const { id } = useParams()                  // id из адреса
   const [data, setData] = useState(undefined) // undefined = загрузка, null = не найдено
-  const [selected, setSelected] = useState([])
-  const [mode, setMode] = useState(null)      // null | 'accept' | 'question'
-  const [name, setName] = useState('')
-  const [agree, setAgree] = useState(false)
-  const [question, setQuestion] = useState('')
-  const [done, setDone] = useState(null)       // 'accepted' | 'question'
-  const openedSent = useRef(false)
+  const [selected, setSelected] = useState([]) // какие опции отметил клиент
 
+  // при открытии страницы загружаем смету по id
   useEffect(() => {
-    getQuote(id).then((d) => {
-      setData(d || null)
-      if (d?.status === 'accepted') setDone('accepted')
-      setName(d?.client?.name || '')
-      // событие «клиент открыл» — один раз
-      if (d && !openedSent.current) {
-        openedSent.current = true
-        sendEvent(id, 'opened')
-      }
-    }).catch(() => setData(null))
+    getQuote(id).then((d) => setData(d || null)).catch(() => setData(null))
   }, [id])
 
   if (data === undefined) return <div className="page center muted">Loading…</div>
@@ -37,68 +23,27 @@ export default function ClientPage() {
   const sum = totals(quote, selected)
   const toggle = (i) => setSelected((s) => (s.includes(i) ? s.filter((x) => x !== i) : [...s, i]))
 
-  async function accept(e) {
-    e.preventDefault()
-    await sendEvent(id, 'accepted', {
-      name,
-      options: selected.map((i) => quote.options[i].name),
-      total: Math.round(sum.total * 100) / 100,
-    })
-    setDone('accepted')
-  }
-
-  async function ask(e) {
-    e.preventDefault()
-    await sendEvent(id, 'question', { name, text: question })
-    setDone('question')
-    setMode(null)
-  }
+  // «Принять» = открыть WhatsApp-чат с мастером с уже готовым текстом.
+  // Бэкенд не нужен: всё, что нужно (телефон мастера, опции, итог), уже есть на странице.
+  const total = money(sum.total, quote.detected.currency)
+  const extras = selected.map((i) => quote.options[i].name)
+  const acceptText = L.acceptMessage(quote.title, total, extras)
+  const phone = (business?.phone || '').replace(/\D/g, '')
+  const waLink = `https://wa.me/${phone}?text=${encodeURIComponent(acceptText)}`
 
   return (
     <div className="page client">
-      <QuoteDocument quote={quote} business={business} client={data.client} selectable={!done} selected={selected} onToggle={toggle} />
+      <QuoteDocument quote={quote} business={business} client={data.client} selectable selected={selected} onToggle={toggle} />
 
       <div className="action-bar">
-        {done === 'accepted' ? (
-          <div className="success">✅ {L.accepted}</div>
-        ) : (
-          <>
-            {done === 'question' && <div className="info">{L.questionSent}</div>}
-            <div className="action-total">
-              <span className="muted small">{L.total}</span>
-              <strong>{money(sum.total, quote.detected.currency)}</strong>
-            </div>
-
-            {mode === null && (
-              <div className="actions">
-                <button className="primary big" onClick={() => setMode('accept')}>{L.accept}</button>
-                <button onClick={() => setMode('question')}>{L.question}</button>
-                {business?.phone && <a className="btn" href={`tel:${business.phone}`}>📞 {business.phone}</a>}
-              </div>
-            )}
-
-            {mode === 'accept' && (
-              <form onSubmit={accept} className="mini-form">
-                <input required placeholder={L.yourName} value={name} onChange={(e) => setName(e.target.value)} />
-                <label className="agree"><input type="checkbox" checked={agree} onChange={(e) => setAgree(e.target.checked)} /> {L.agree}</label>
-                <div className="actions">
-                  <button className="primary" disabled={!agree}>{L.accept}</button>
-                  <button type="button" className="link" onClick={() => setMode(null)}>←</button>
-                </div>
-              </form>
-            )}
-
-            {mode === 'question' && (
-              <form onSubmit={ask} className="mini-form">
-                <textarea required rows={3} placeholder="…" value={question} onChange={(e) => setQuestion(e.target.value)} />
-                <div className="actions">
-                  <button className="primary">{L.send}</button>
-                  <button type="button" className="link" onClick={() => setMode(null)}>←</button>
-                </div>
-              </form>
-            )}
-          </>
-        )}
+        <div className="action-total">
+          <span className="muted small">{L.total}</span>
+          <strong>{total}</strong>
+        </div>
+        <div className="actions">
+          {phone && <a className="btn primary big wa" target="_blank" rel="noreferrer" href={waLink}>{L.acceptWhatsApp}</a>}
+          {phone && <a className="btn" href={`tel:${business.phone}`}>📞 {business.phone}</a>}
+        </div>
       </div>
     </div>
   )

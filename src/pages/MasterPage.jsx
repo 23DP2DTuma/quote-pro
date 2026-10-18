@@ -3,14 +3,8 @@ import StartScreen from '../components/StartScreen'
 import DetectedBar from '../components/DetectedBar'
 import QuoteDocument from '../components/QuoteDocument'
 import SendDialog from '../components/SendDialog'
-import { generateQuote, translateQuote, listQuotes, business, isDemo } from '../lib/api'
+import { generateQuote, translateQuote, listQuotes, business } from '../lib/api'
 import { money, totals, detectLanguage } from '../lib/quote'
-
-const STATUS = {
-  sent: { label: 'Sent', cls: 'st-sent' },
-  opened: { label: '👀 Opened', cls: 'st-opened' },
-  accepted: { label: '✅ Accepted', cls: 'st-accepted' },
-}
 
 // Экран мастера: описал → смета → отправил → видит статусы
 export default function MasterPage() {
@@ -86,10 +80,8 @@ export default function MasterPage() {
             <a key={q.id} href={`/q/${q.id}`} target="_blank" rel="noreferrer" className="sent-row">
               <span className="grow">{q.quote.title}{q.client?.name ? ` · ${q.client.name}` : ''}</span>
               <span>{money(totals(q.quote).total, q.quote.detected.currency)}</span>
-              <span className={`status ${STATUS[q.status]?.cls}`}>{STATUS[q.status]?.label}</span>
             </a>
           ))}
-          {isDemo && <p className="muted small">Demo: open a link as the client and the status here will update. In production, notifications arrive via Telegram.</p>}
         </section>
       )}
     </div>

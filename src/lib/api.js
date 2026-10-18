@@ -8,8 +8,6 @@
     POST {N8N}/generate-quote   { text }                       → объект сметы
     POST {N8N}/save-quote       { quote, business, client }    → { id }
     GET  {N8N}/get-quote?id=... →                                { quote, business, client, status }
-    POST {N8N}/quote-event      { id, type, payload }          → { ok: true }
-         type: "opened" | "accepted" | "question"
     GET  {N8N}/list-quotes      →                                { quotes: [...] }
     POST {N8N}/translate-quote  { quote, language }            → переведённая смета
 */
@@ -45,7 +43,7 @@ export async function generateQuote(text) {
 export async function saveQuote(quote, business, client) {
   if (isDemo) {
     const id = Math.random().toString(36).slice(2, 8)
-    store.set(`q_${id}`, { quote, business, client, status: 'sent', sentAt: Date.now(), events: [] })
+    store.set(`q_${id}`, { quote, business, client, sentAt: Date.now() })
     return { id }
   }
   // appUrl — чтобы n8n мог вставить ссылку на смету в сообщение Telegram
@@ -56,21 +54,6 @@ export async function getQuote(id) {
   if (isDemo) return store.get(`q_${id}`)
   const data = await call(`get-quote?id=${encodeURIComponent(id)}`)
   return data && data.quote ? data : null // n8n отвечает { notFound: true }, если сметы нет
-}
-
-// События со страницы клиента. В боевом режиме n8n шлёт мастеру сообщение в Telegram.
-export async function sendEvent(id, type, payload = {}) {
-  if (isDemo) {
-    const q = store.get(`q_${id}`)
-    if (q) {
-      q.events.push({ type, payload, at: Date.now() })
-      if (type === 'accepted') q.status = 'accepted'
-      else if (type === 'opened' && q.status === 'sent') q.status = 'opened'
-      store.set(`q_${id}`, q)
-    }
-    return { ok: true }
-  }
-  return call('quote-event', { id, type, payload })
 }
 
 // Перевод готовой сметы на другой язык (RU / LV / EN).

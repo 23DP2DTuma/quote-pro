@@ -59,6 +59,8 @@ export const T = {
     send: 'Отправить', questionSent: 'Вопрос отправлен — мастер ответит в ближайшее время.',
     validUntil: 'Действительна до', from: 'От',
     unitPrice: 'Цена/ед.', yourCompany: 'Ваша компания',
+    acceptWhatsApp: 'Принять в WhatsApp',
+    acceptMessage: (title, total, extras) => `Здравствуйте! Принимаю смету «${title}» на ${total}.` + (extras.length ? ` Дополнительно: ${extras.join(', ')}.` : '') + ' Когда можем начать?',
   },
   en: {
     quote: 'Quote', materials: 'Materials', labour: 'Labour', item: 'Item', qty: 'Qty',
@@ -71,6 +73,8 @@ export const T = {
     send: 'Send', questionSent: 'Question sent — the contractor will reply shortly.',
     validUntil: 'Valid until', from: 'From',
     unitPrice: 'Unit price', yourCompany: 'Your company',
+    acceptWhatsApp: 'Accept via WhatsApp',
+    acceptMessage: (title, total, extras) => `Hello! I accept the quote "${title}" for ${total}.` + (extras.length ? ` Extras: ${extras.join(', ')}.` : '') + ' When can you start?',
   },
 }
 T.lv = {
@@ -85,5 +89,7 @@ T.lv = {
   accepted: 'Tāme apstiprināta. Meistars sazināsies ar jums, lai vienotos par datumu.',
   send: 'Nosūtīt', questionSent: 'Jautājums nosūtīts — meistars drīz atbildēs.',
   validUntil: 'Derīga līdz', from: 'No',
+  acceptWhatsApp: 'Apstiprināt WhatsApp',
+  acceptMessage: (title, total, extras) => `Labdien! Apstiprinu tāmi «${title}» par ${total}.` + (extras.length ? ` Papildus: ${extras.join(', ')}.` : '') + ' Kad varam sākt?',
 }
 export const t = (lang) => T[lang] || T.en
