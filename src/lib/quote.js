@@ -51,6 +51,7 @@ export const T = {
     accepted: 'Смета принята. Мастер свяжется с вами для согласования даты.',
     send: 'Отправить', questionSent: 'Вопрос отправлен — мастер ответит в ближайшее время.',
     validUntil: 'Действительна до', from: 'От',
+    unitPrice: 'Цена/ед.', yourCompany: 'Ваша компания',
   },
   en: {
     quote: 'Quote', materials: 'Materials', labour: 'Labour', item: 'Item', qty: 'Qty',
@@ -62,6 +63,7 @@ export const T = {
     accepted: 'Quote accepted. The contractor will contact you to agree a start date.',
     send: 'Send', questionSent: 'Question sent — the contractor will reply shortly.',
     validUntil: 'Valid until', from: 'From',
+    unitPrice: 'Unit price', yourCompany: 'Your company',
   },
 }
 T.lv = {
@@ -69,5 +71,6 @@ T.lv = {
   quote: 'Tāme', materials: 'Materiāli', labour: 'Darbi', total: 'Kopā', vat: 'PVN',
   accept: 'Apstiprināt tāmi', question: 'Uzdot jautājumu', options: 'Papildu iespējas',
   included: 'Iekļauts', excluded: 'Nav iekļauts', warranty: 'Garantija', payment: 'Apmaksa',
+  unitPrice: 'Cena/vien.', yourCompany: 'Jūsu uzņēmums',
 }
 export const t = (lang) => T[lang] || T.en

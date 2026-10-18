@@ -36,7 +36,7 @@ export default function QuoteDocument({ quote, onChange, business, client, edita
     <article className="doc">
       <header className="doc-head">
         <div>
-          <div className="doc-brand">{business?.name || 'Ваша компания'}</div>
+          <div className="doc-brand">{business?.name || L.yourCompany}</div>
           {business?.phone && <div className="muted small">{business.phone}</div>}
         </div>
         <div className="right">
@@ -53,7 +53,7 @@ export default function QuoteDocument({ quote, onChange, business, client, edita
       {/* Материалы */}
       <h3>{L.materials}</h3>
       <table>
-        <thead><tr><th>{L.item}</th><th className="num">{L.qty}</th><th className="num">€/ед.</th><th className="num">{L.amount}</th>{editable && <th />}</tr></thead>
+        <thead><tr><th>{L.item}</th><th className="num">{L.qty}</th><th className="num">{L.unitPrice}</th><th className="num">{L.amount}</th>{editable && <th />}</tr></thead>
         <tbody>
           {quote.materials.map((m, i) => (
             <tr key={i}>
@@ -66,7 +66,7 @@ export default function QuoteDocument({ quote, onChange, business, client, edita
           ))}
         </tbody>
       </table>
-      {editable && <button className="link" onClick={() => add('materials', { name: 'Новая позиция', qty: 1, unit: 'pcs', price: 0 })}>+ строка</button>}
+      {editable && <button className="link" onClick={() => add('materials', { name: 'New item', qty: 1, unit: 'pcs', price: 0 })}>+ add row</button>}
 
       {/* Работы */}
       <h3>{L.labour}</h3>
@@ -83,7 +83,7 @@ export default function QuoteDocument({ quote, onChange, business, client, edita
           ))}
         </tbody>
       </table>
-      {editable && <button className="link" onClick={() => add('labour', { name: 'Новый этап', duration: '1', price: 0 })}>+ строка</button>}
+      {editable && <button className="link" onClick={() => add('labour', { name: 'New phase', duration: '1', price: 0 })}>+ add row</button>}
 
       {/* Опции — у клиента галочки */}
       {quote.options.length > 0 && (

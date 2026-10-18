@@ -8,7 +8,7 @@ export default function App() {
     <BrowserRouter>
       <div className="topbar">
         <Link to="/" className="logo">Quote<span>Pro</span></Link>
-        {isDemo && <span className="badge">демо-режим · без n8n</span>}
+        {isDemo && <span className="badge">demo mode · no n8n</span>}
       </div>
       <Routes>
         <Route path="/" element={<MasterPage />} />

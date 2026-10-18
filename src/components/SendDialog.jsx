@@ -25,14 +25,14 @@ export default function SendDialog({ quote, onClose, onSent }) {
       setLink(url)
       onSent?.(id, biz, client)
     } catch (err) {
-      alert('Не удалось сохранить смету: ' + err.message)
+      alert('Could not save the quote: ' + err.message)
     } finally {
       setBusy(false)
     }
   }
 
   const total = money(totals(quote).total, quote.detected.currency)
-  const msg = `Добрый день${client.name ? ', ' + client.name : ''}! Ваша смета «${quote.title}» на ${total}: ${link}`
+  const msg = `Hello${client.name ? ' ' + client.name : ''}! Here is your quote "${quote.title}" for ${total}: ${link}`
 
   function copy() {
     navigator.clipboard?.writeText(link).then(() => { setCopied(true); setTimeout(() => setCopied(false), 1500) })
@@ -45,37 +45,37 @@ export default function SendDialog({ quote, onClose, onSent }) {
 
         {!link ? (
           <form onSubmit={send}>
-            <h2>Отправить клиенту</h2>
-            <p className="muted small">Клиент получит ссылку: сможет выбрать опции и принять смету онлайн. Вам придёт уведомление, когда он её откроет.</p>
+            <h2>Send to client</h2>
+            <p className="muted small">Your client gets a link where they can pick options and accept the quote online. You'll be notified when they open it.</p>
 
             <fieldset>
-              <legend>Вы {saved.name && <span className="muted small">· запомнили с прошлого раза</span>}</legend>
-              <input required placeholder="Название компании *" value={biz.name} onChange={(e) => setBiz({ ...biz, name: e.target.value })} />
-              <input required placeholder="Ваш телефон *" value={biz.phone} onChange={(e) => setBiz({ ...biz, phone: e.target.value })} />
-              <input type="email" placeholder="Email (пришлём копию)" value={biz.email} onChange={(e) => setBiz({ ...biz, email: e.target.value })} />
+              <legend>You {saved.name && <span className="muted small">· saved from last time</span>}</legend>
+              <input required placeholder="Company name *" value={biz.name} onChange={(e) => setBiz({ ...biz, name: e.target.value })} />
+              <input required placeholder="Your phone *" value={biz.phone} onChange={(e) => setBiz({ ...biz, phone: e.target.value })} />
+              <input type="email" placeholder="Email (we'll send you a copy)" value={biz.email} onChange={(e) => setBiz({ ...biz, email: e.target.value })} />
             </fieldset>
 
             <fieldset>
-              <legend>Клиент</legend>
-              <input placeholder="Имя клиента" value={client.name} onChange={(e) => setClient({ ...client, name: e.target.value })} />
-              <input placeholder="Телефон или email клиента (для напоминаний)" value={client.contact} onChange={(e) => setClient({ ...client, contact: e.target.value })} />
+              <legend>Client</legend>
+              <input placeholder="Client name" value={client.name} onChange={(e) => setClient({ ...client, name: e.target.value })} />
+              <input placeholder="Client phone or email (for reminders)" value={client.contact} onChange={(e) => setClient({ ...client, contact: e.target.value })} />
             </fieldset>
 
-            <button className="primary big" disabled={busy}>{busy ? 'Сохраняем…' : 'Получить ссылку'}</button>
+            <button className="primary big" disabled={busy}>{busy ? 'Saving…' : 'Get link'}</button>
           </form>
         ) : (
           <div>
-            <h2>Ссылка готова ✓</h2>
+            <h2>Link ready ✓</h2>
             <div className="linkbox">
               <input readOnly value={link} onFocus={(e) => e.target.select()} />
-              <button className="primary" onClick={copy}>{copied ? 'Скопировано' : 'Копировать'}</button>
+              <button className="primary" onClick={copy}>{copied ? 'Copied' : 'Copy'}</button>
             </div>
             <div className="share">
               <a className="btn wa" target="_blank" rel="noreferrer" href={`https://wa.me/?text=${encodeURIComponent(msg)}`}>WhatsApp</a>
               <a className="btn tg" target="_blank" rel="noreferrer" href={`https://t.me/share/url?url=${encodeURIComponent(link)}&text=${encodeURIComponent(msg)}`}>Telegram</a>
-              <a className="btn" target="_blank" rel="noreferrer" href={link}>Открыть как клиент</a>
+              <a className="btn" target="_blank" rel="noreferrer" href={link}>Open as client</a>
             </div>
-            <p className="muted small">Что дальше: когда клиент откроет, примет смету или задаст вопрос — вам придёт сообщение. Если не ответит 2 дня, ему уйдёт вежливое напоминание.</p>
+            <p className="muted small">What's next: you'll get a message when the client opens the quote, accepts it or asks a question. If they don't respond within 2 days, they'll get a polite reminder.</p>
           </div>
         )}
       </div>

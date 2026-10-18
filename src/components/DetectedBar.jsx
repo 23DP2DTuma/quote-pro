@@ -14,22 +14,22 @@ export default function DetectedBar({ detected, onChange }) {
   return (
     <div className="detected">
       <div className="detected-row">
-        <span className="spark">✨ Определили:</span>
+        <span className="spark">✨ Detected:</span>
         <span>{detected.industry}</span>·<span>{detected.region}</span>·
-        <span>{detected.currency}</span>·<span>НДС {detected.vat}%</span>·
+        <span>{detected.currency}</span>·<span>VAT {detected.vat}%</span>·
         <span>{detected.language.toUpperCase()}</span>
-        <button className="link" onClick={() => setOpen(!open)}>{open ? 'готово' : 'изменить'}</button>
+        <button className="link" onClick={() => setOpen(!open)}>{open ? 'done' : 'edit'}</button>
       </div>
       {open && (
         <div className="detected-edit">
-          <label>Отрасль<input value={detected.industry} onChange={(e) => set({ industry: e.target.value })} /></label>
-          <label>Регион
+          <label>Industry<input value={detected.industry} onChange={(e) => set({ industry: e.target.value })} /></label>
+          <label>Region
             <select value={detected.region} onChange={(e) => set({ region: e.target.value, ...REGIONS[e.target.value] })}>
               {Object.keys(REGIONS).map((r) => <option key={r}>{r}</option>)}
             </select>
           </label>
-          <label>НДС %<input type="number" value={detected.vat} onChange={(e) => set({ vat: Number(e.target.value) })} /></label>
-          <label>Язык
+          <label>VAT %<input type="number" value={detected.vat} onChange={(e) => set({ vat: Number(e.target.value) })} /></label>
+          <label>Language
             <select value={detected.language} onChange={(e) => set({ language: e.target.value })}>
               <option value="ru">RU</option><option value="lv">LV</option><option value="en">EN</option>
             </select>

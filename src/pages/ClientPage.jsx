@@ -29,8 +29,8 @@ export default function ClientPage() {
     }).catch(() => setData(null))
   }, [id])
 
-  if (data === undefined) return <div className="page center muted">Загрузка…</div>
-  if (data === null) return <div className="page center"><h2>Смета не найдена</h2><p className="muted">Возможно, ссылка устарела. Свяжитесь с мастером.</p></div>
+  if (data === undefined) return <div className="page center muted">Loading…</div>
+  if (data === null) return <div className="page center"><h2>Quote not found</h2><p className="muted">The link may have expired. Please contact the contractor.</p></div>
 
   const { quote, business } = data
   const L = t(quote.detected.language)

@@ -1,7 +1,7 @@
 import { useRef, useState } from 'react'
 
 const EXAMPLES = [
-  'Ремонт ванной 6 м² в Риге, демонтаж, новая плитка, подвесной унитаз',
+  'Bathroom 6 m² in Riga, strip-out, new tiles, wall-hung WC',
   'Install kitchen 12 m² in Riga, oak units, new worktop',
   'Terase 24 m² no lapegles, Jūrmala',
 ]
@@ -15,7 +15,7 @@ export default function StartScreen({ onSubmit, loading }) {
   const Speech = typeof window !== 'undefined' && (window.SpeechRecognition || window.webkitSpeechRecognition)
 
   function toggleVoice() {
-    if (!Speech) return alert('Голосовой ввод работает в Chrome / Edge')
+    if (!Speech) return alert('Voice input works in Chrome / Edge')
     if (listening) return recRef.current?.stop()
     const rec = new Speech()
     rec.lang = navigator.language?.startsWith('lv') ? 'lv-LV' : 'ru-RU'
@@ -39,24 +39,24 @@ export default function StartScreen({ onSubmit, loading }) {
 
   return (
     <section className="start">
-      <h1>Опишите работу — получите смету</h1>
-      <p className="muted">Без анкет. Напишите или наговорите одной фразой: что, сколько, где.</p>
+      <h1>Describe the job — get a quote</h1>
+      <p className="muted">No forms. Type or say it in one sentence: what, how much, where.</p>
 
       <form onSubmit={submit} className="start-form">
         <div className="input-wrap">
           <textarea
             value={text}
             onChange={(e) => setText(e.target.value)}
-            placeholder="Например: ванная 6 м² в Риге, демонтаж, новая плитка, подвесной унитаз"
+            placeholder="For example: bathroom 6 m² in Riga, strip-out, new tiles, wall-hung WC"
             rows={3}
             onKeyDown={(e) => { if (e.key === 'Enter' && (e.metaKey || e.ctrlKey)) submit(e) }}
           />
-          <button type="button" className={`mic ${listening ? 'on' : ''}`} onClick={toggleVoice} title="Голосовой ввод">
+          <button type="button" className={`mic ${listening ? 'on' : ''}`} onClick={toggleVoice} title="Voice input">
             {listening ? '■' : '🎤'}
           </button>
         </div>
         <button className="primary big" disabled={loading || text.trim().length < 6}>
-          {loading ? 'Считаем материалы и работы…' : 'Сделать смету →'}
+          {loading ? 'Calculating materials and labour…' : 'Create quote →'}
         </button>
       </form>
 

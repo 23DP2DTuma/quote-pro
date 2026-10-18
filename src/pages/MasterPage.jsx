@@ -7,9 +7,9 @@ import { generateQuote, listQuotes, business, isDemo } from '../lib/api'
 import { money, totals } from '../lib/quote'
 
 const STATUS = {
-  sent: { label: 'Отправлена', cls: 'st-sent' },
-  opened: { label: '👀 Открыта', cls: 'st-opened' },
-  accepted: { label: '✅ Принята', cls: 'st-accepted' },
+  sent: { label: 'Sent', cls: 'st-sent' },
+  opened: { label: '👀 Opened', cls: 'st-opened' },
+  accepted: { label: '✅ Accepted', cls: 'st-accepted' },
 }
 
 // Экран мастера: описал → смета → отправил → видит статусы
@@ -31,10 +31,10 @@ export default function MasterPage() {
     setLoading(true)
     try {
       const result = await generateQuote(text)
-      console.log('Пришла смета:', result)
+      console.log('Quote received:', result)
       setQuote(result)
     } catch (err) {
-      alert('Ошибка генерации: ' + err.message)
+      alert('Generation failed: ' + err.message)
     } finally {
       setLoading(false)
     }
@@ -48,11 +48,11 @@ export default function MasterPage() {
         <>
           <DetectedBar detected={quote.detected} onChange={(d) => setQuote({ ...quote, detected: d })} />
           <div className="toolbar">
-            <button className="link" onClick={() => setQuote(null)}>← Новая смета</button>
-            <span className="muted small">Кликните на любую строку, чтобы изменить</span>
+            <button className="link" onClick={() => setQuote(null)}>← New quote</button>
+            <span className="muted small">Click any row to edit</span>
             <div className="grow" />
             <button onClick={() => window.print()}>🖨 PDF</button>
-            <button className="primary" onClick={() => setSending(true)}>Отправить клиенту →</button>
+            <button className="primary" onClick={() => setSending(true)}>Send to client →</button>
           </div>
           <QuoteDocument quote={quote} onChange={setQuote} business={business.load()} editable />
         </>
@@ -64,7 +64,7 @@ export default function MasterPage() {
 
       {sent.length > 0 && (
         <section className="sent">
-          <h3>Мои сметы</h3>
+          <h3>My quotes</h3>
           {sent.map((q) => (
             <a key={q.id} href={`/q/${q.id}`} target="_blank" rel="noreferrer" className="sent-row">
               <span className="grow">{q.quote.title}{q.client?.name ? ` · ${q.client.name}` : ''}</span>
@@ -72,7 +72,7 @@ export default function MasterPage() {
               <span className={`status ${STATUS[q.status]?.cls}`}>{STATUS[q.status]?.label}</span>
             </a>
           ))}
-          {isDemo && <p className="muted small">Демо: откройте ссылку как клиент — статус здесь обновится. В боевом режиме уведомление приходит в Telegram.</p>}
+          {isDemo && <p className="muted small">Demo: open a link as the client and the status here will update. In production, notifications arrive via Telegram.</p>}
         </section>
       )}
     </div>
